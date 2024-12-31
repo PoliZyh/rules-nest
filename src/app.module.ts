@@ -8,6 +8,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MessageModule } from './message/message.module';
 import { GeneralModule } from './general/general.module';
 import { LoggerRequestMiddleware } from './middleware/logger-request/logger-request.middleware';
+import { ProjectModule } from './project/project.module';
+import { UserProjectModule } from './user-project/user-project.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { LoggerRequestMiddleware } from './middleware/logger-request/logger-requ
     }),
     MessageModule,
     GeneralModule,
+    ProjectModule,
+    UserProjectModule,
   ],
   controllers: [AppController],
   providers: [AppService, MessageService],

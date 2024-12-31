@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MessageService } from 'src/message/message.service';
+import { removeKeys } from 'src/utils/removeKeys';
 
 @Injectable()
 export class UserService {
@@ -15,6 +16,13 @@ export class UserService {
     @InjectRepository(User) private readonly user: Repository<User>,
     private readonly messageService: MessageService
   ) {}
+
+  async validateUser(loginUserDto: LoginUserDto) {
+    const user = await this.user.findOne({ where: { username: loginUserDto.username } })
+    if (!user) return null // 用户不存在
+    if (loginUserDto.password !== user.password) return null // 用户不匹配
+    return user
+  }
 
   async create(registerUserDto: RegisterUserDto) {
     // const data = new User()
@@ -28,8 +36,10 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const user = await this.user.findOne({ where: { id } })
+    const userObj = removeKeys(user, ['password'])
+    return userObj
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

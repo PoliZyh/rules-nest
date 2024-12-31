@@ -21,8 +21,6 @@ export class LoggerRequestMiddleware implements NestMiddleware {
     if (!fs.existsSync(logFolder)) {
       fs.mkdirSync(logFolder);  // 如果文件夹不存在，创建文件夹
     }
-    console.log(logFolder)
-
 
     const logFile = path.join(logFolder, 'request-log.txt');
 

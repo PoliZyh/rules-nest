@@ -12,8 +12,10 @@ export class UserController {
 
   //1.1 登陆接口
   @Post('/login')
-  userLogin(@Body(UserPipe) loginUserDto: LoginUserDto) {
-    // todo session & login
+  async userLogin(@Req() req, @Body(UserPipe) loginUserDto: LoginUserDto) {
+    const res = await this.userService.validateUser(loginUserDto)
+    if (!res) return false
+    req.session.userId = res.id
     return true
   }
 
@@ -22,10 +24,18 @@ export class UserController {
   userRegister(@Req() req, @Body() registerUserDto: RegisterUserDto) {
     const verCode = req.session.code
     // 验证验证码是否正确
+    // todo重名
     if(verCode !== registerUserDto.code) { return false } // false即为验证不通过
 
     this.userService.create(registerUserDto)
     return true
+  }
+
+  //1.6 获取用户信息接口
+  @Post('/getUserInfo')
+  async getUserInfo(@Req() req) {
+    const res = await this.userService.findOne(req.session.userId)
+    return res
   }
 
   
