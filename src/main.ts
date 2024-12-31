@@ -19,6 +19,8 @@ async function bootstrap() {
     }
   }))
 
+  // app.useLogger(new GlobalLoggerService()) // 全局logger
+
   app.setGlobalPrefix('api'); // 设置全局前缀为 'api'
 
   app.useGlobalPipes(new ValidationPipe()) // 全局交验，无需手动单个配置

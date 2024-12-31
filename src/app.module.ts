@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -7,6 +7,7 @@ import { MessageService } from './message/message.service';
 import { ConfigModule } from '@nestjs/config';
 import { MessageModule } from './message/message.module';
 import { GeneralModule } from './general/general.module';
+import { LoggerRequestMiddleware } from './middleware/logger-request/logger-request.middleware';
 
 @Module({
   imports: [
@@ -32,9 +33,13 @@ import { GeneralModule } from './general/general.module';
       envFilePath: '.env'
     }),
     MessageModule,
-    GeneralModule
+    GeneralModule,
   ],
   controllers: [AppController],
   providers: [AppService, MessageService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerRequestMiddleware).forRoutes('*')
+  }
+}

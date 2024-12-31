@@ -7,7 +7,9 @@ const smsClient = tencentcloud.sms.v20210111.Client
 @Injectable()
 export class MessageService {
 
-    constructor(private readonly configService: ConfigService) {}
+    constructor(
+        private readonly configService: ConfigService,
+    ) {}
     // 发送短信验证码
     async sendMessage(code: string, phone: string) {
         // 配置

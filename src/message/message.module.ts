@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MessageService } from './message.service';
 
-
 @Module({
     providers: [MessageService],
     exports: [MessageService] // 导出共享
