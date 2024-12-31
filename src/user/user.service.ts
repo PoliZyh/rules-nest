@@ -6,18 +6,22 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { MessageService } from 'src/message/message.service';
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(User) private readonly user: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly user: Repository<User>,
+    private readonly messageService: MessageService
+  ) {}
 
   async create(registerUserDto: RegisterUserDto) {
-    const data = new User()
-    data.username = registerUserDto.username
-    data.password = registerUserDto.password
-    const info = await this.user.save(data)
-    return info
+    // const data = new User()
+    // data.username = registerUserDto.username
+    // data.password = registerUserDto.password
+    // const info = await this.user.save(data)
+    // return info
   }
 
   findAll() {

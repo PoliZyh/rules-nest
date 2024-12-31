@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,10 +19,18 @@ export class UserController {
 
   // 1.2 注册接口
   @Post('/register')
-  userRegister(@Body() registerUserDto: RegisterUserDto) {
+  userRegister(@Req() req, @Body() registerUserDto: RegisterUserDto) {
+    const verCode = req.session.code
+    // 验证验证码是否正确
+    if(verCode !== registerUserDto.code) { return false } // false即为验证不通过
+
     this.userService.create(registerUserDto)
     return true
   }
+
+  
+
+
 
 
 
