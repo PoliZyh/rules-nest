@@ -10,6 +10,11 @@ import { GeneralModule } from './general/general.module';
 import { LoggerRequestMiddleware } from './middleware/logger-request/logger-request.middleware';
 import { ProjectModule } from './project/project.module';
 import { UserProjectModule } from './user-project/user-project.module';
+import { RuleModule } from './rule/rule.module';
+import { RuleHistoryModule } from './rule-history/rule-history.module';
+import { ApplyNoticeModule } from './apply-notice/apply-notice.module';
+import { FileModule } from './file/file.module';
+import { VariableModule } from './variable/variable.module';
 
 @Module({
   imports: [
@@ -38,6 +43,11 @@ import { UserProjectModule } from './user-project/user-project.module';
     GeneralModule,
     ProjectModule,
     UserProjectModule,
+    RuleModule,
+    RuleHistoryModule,
+    ApplyNoticeModule,
+    FileModule,
+    VariableModule,
   ],
   controllers: [AppController],
   providers: [AppService, MessageService],
