@@ -12,23 +12,6 @@ export class UserProjectController {
     return this.userProjectService.create(createUserProjectDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userProjectService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userProjectService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserProjectDto: UpdateUserProjectDto) {
-    return this.userProjectService.update(+id, updateUserProjectDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userProjectService.remove(+id);
-  }
+  
+  
 }

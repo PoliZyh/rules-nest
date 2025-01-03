@@ -16,5 +16,4 @@ export class UserProject {
     @Column()
     position: Positions
 
-
 }

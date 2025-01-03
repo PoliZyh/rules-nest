@@ -12,7 +12,7 @@ export class RuleHistory {
     userId: number
 
     @Column()
-    opration: Operation 
+    operation: Operation 
 
     @ManyToOne(() => Rule, (rule) => rule.ruleHistory, { onDelete: 'CASCADE' })
     rule: Rule
