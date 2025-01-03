@@ -22,7 +22,7 @@ export class UserProjectService {
         projectId
       }
     })
-    console.log(info)
+    // console.log(info)
     return info
   }
 

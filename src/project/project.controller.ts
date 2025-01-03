@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { UserProjectService } from 'src/user-project/user-project.service';
+import { enum2positions } from 'src/utils/enum2pos';
 
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly userProjectService: UserProjectService
+  ) {}
 
   // 1.5 新增项目 
   @Post('add')
@@ -28,5 +33,18 @@ export class ProjectController {
     return data
   }
 
+  // 2.3.1 获取项⽬成员
+  @Get('memebers')
+  async getProjectMembers(@Query('projectId') projectId) {
+    const members = await this.userProjectService.getMemberByProjectId(projectId)
+    const data = []
+    members.forEach(item => {
+      data.push({
+        ...item,
+        position: enum2positions(item.position)
+      })
+    })
+    return data
+  }
 
 }
