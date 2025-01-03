@@ -5,6 +5,7 @@ import { UpdateRuleDto } from './dto/update-rule.dto';
 import { FileService } from 'src/file/file.service';
 import { FileType } from 'src/interface/common.interface';
 import { UserProjectService } from 'src/user-project/user-project.service';
+import { enum2operation } from 'src/utils/enum2op';
 
 @Controller('rule')
 export class RuleController {
@@ -25,6 +26,18 @@ export class RuleController {
       pkgNum,
       lastFourSubmissions,
       teamSubmissionVolume
+    }
+  }
+
+  // 2.2 获取项⽬动态
+  @Get('/projectDynamics')
+  async getProjectDynamics(@Query('projectId') projectId) {
+    const data = await this.ruleService.findRuleHistoryByProjectId(projectId, 0, false)
+    data.forEach(item => {
+      item.event = enum2operation(item.username, item.operation, item.ruleName)
+    })
+    return {
+      "测试时间": data
     }
   }
 
