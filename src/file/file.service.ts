@@ -28,4 +28,11 @@ export class FileService {
     return info
   }
 
+  async removeFileById(fileId: number) {
+    const info = await this.file.delete({
+      id: fileId
+    })
+    return info.affected > 0 ? true : false
+  }
+
 }
