@@ -155,5 +155,11 @@ export class RuleController {
     const data = await this.ruleService.findRulesByFileId(fileId)
     return data
   }
+
+  // 2.7.11 向规则集中添加规则
+  @Post('/joinToSet')
+  async addRuleSet() {
+    
+  }
  
 }
