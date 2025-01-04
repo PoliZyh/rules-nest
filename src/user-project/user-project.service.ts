@@ -26,4 +26,13 @@ export class UserProjectService {
     return info
   }
 
+  async remove(projectId, userId) {
+    const info = await this.userProject.delete({
+      projectId,
+      userId
+    })
+    // console.log(info.affected)
+    return info.affected > 0 ? true : false 
+  }
+
 }

@@ -47,4 +47,11 @@ export class ProjectController {
     return data
   }
 
+  // 2.3.2 删除项⽬成员
+  @Post('deleteMember')
+  async deleteMember(@Body('projectId') projectId: number, @Body('userId') userId: number) {
+    const info = await this.userProjectService.remove(projectId, userId)
+    return info
+  }
+
 }

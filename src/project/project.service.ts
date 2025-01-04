@@ -58,7 +58,7 @@ export class ProjectService {
   }
 
   async remove(id: number) {
-    const info = await this.project.delete(id)
-    return info
+    const data = await this.project.delete(id)
+    return data
   }
 }

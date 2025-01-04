@@ -6,6 +6,9 @@ import { Repository } from 'typeorm';
 import { Rule } from './entities/rule.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserProject } from 'src/user-project/entities/user-project.entity';
+import { IsDelete, IsOpen } from 'src/interface/common.interface';
+import { Not } from 'typeorm';
+
 
 @Injectable()
 export class RuleService {
@@ -86,6 +89,32 @@ export class RuleService {
     return data
   }
 
+  async getRulesByProjectId(projectId: number) {
+    const info = await this.rule.find({ 
+      where: { 
+        project: { id: projectId },
+        isDelete: Not(IsDelete.Yes)
+      } })
+      return info
+  }
+
+  async updateRuleStatus(id: number, status: IsOpen) {
+    const info = await this.rule.update({
+      id
+    }, {
+      status
+    })
+    return info.affected > 0 ? true : false
+  }
+
+  async deleteRule(id: number) {
+    const info = await this.rule.update({
+      id
+    }, {
+      isDelete: IsDelete.Yes
+    })
+    return info.affected > 0 ? true : false
+  }
 
 
 }

@@ -6,12 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { FileModule } from 'src/file/file.module';
 import { UserProjectModule } from 'src/user-project/user-project.module';
+import { RuleHistoryModule } from 'src/rule-history/rule-history.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Rule, User]),
     FileModule,
-    UserProjectModule
+    UserProjectModule,
+    RuleHistoryModule
   ],
   controllers: [RuleController],
   providers: [RuleService],
