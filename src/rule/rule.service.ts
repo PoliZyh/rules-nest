@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { Rule } from './entities/rule.entity';
 import { User } from 'src/user/entities/user.entity';
 import { UserProject } from 'src/user-project/entities/user-project.entity';
-import { IsDelete, IsOpen } from 'src/interface/common.interface';
+import { FileType, IsDelete, IsOpen } from 'src/interface/common.interface';
 import { Not } from 'typeorm';
 import { Project } from 'src/project/entities/project.entity';
 
@@ -125,5 +125,22 @@ export class RuleService {
     return info.affected > 0 ? true : false
   }
 
+  async updateRule(ruleId: number, newData) {
+    const info = await this.rule.update({
+      id: ruleId
+    }, newData)
+    return info.affected > 0 ? true : false
+  }
+
+  async findRulesByFileId(fileId: number) {
+    const info = await this.rule.find({
+      where: {
+        fileId,
+        isDelete: IsDelete.No
+      }
+    })
+    return info
+  }
+  
 
 }

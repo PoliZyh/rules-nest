@@ -134,5 +134,26 @@ export class RuleController {
       id
     }
   }
+
+  // 2.7.7 修改规则
+  @Post('/update')
+  async updateRule(
+    @Body('rule') rule: string,
+    @Body('ruleId') ruleId: number,
+    @Body('ruleName') ruleName: string
+  ) {
+    const data = await this.ruleService.updateRule(ruleId, {
+      rule,
+      ruleName
+    })
+    return data
+  }
+
+  // 2.7.10 获取某个决策集/规则库⾥的所有规则
+  @Post('get')
+  async getRules(@Body('fileType') fileType: FileType, @Body('fileId') fileId: number) {
+    const data = await this.ruleService.findRulesByFileId(fileId)
+    return data
+  }
  
 }

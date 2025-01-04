@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
-import type { FileType } from 'src/interface/common.interface';
+import { FileType, IsFolder } from 'src/interface/common.interface';
 import { File } from './entities/file.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Project } from 'src/project/entities/project.entity';
 
 @Injectable()
 export class FileService {
@@ -13,8 +14,18 @@ export class FileService {
     @InjectRepository(File) private readonly file: Repository<File>
   ) { }
 
-  create(createFileDto: CreateFileDto) {
-    return 'This action adds a new file';
+  async create(
+    fileName: string, fileType: FileType, isFolder: IsFolder,
+    parentId: number, project: Project
+  ) {
+    const data = new File()
+    data.fileName = fileName
+    data.fileType = isFolder == IsFolder.Yes ? FileType.FileRule : fileType
+    data.isFolder = isFolder
+    data.parentId = parentId
+    data.project = project
+    const info = await this.file.save(data)
+    return info.id > 0 ? true : false
   }
 
   // 根据projectId统计文件类型个数
@@ -77,6 +88,13 @@ export class FileService {
     });
 
     return tree;
+  }
+
+  async findFileByFileId(fileId: number) {
+    const info = await this.file.findOne({
+      where: { id: fileId }
+    })
+    return info
   }
 
 }
