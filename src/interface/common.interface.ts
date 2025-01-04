@@ -27,9 +27,9 @@ export enum Operation {
 
 // 申请状态
 export enum ApplyStatus {
-    Wating = 0,
-    Done_Accept = 1,
-    Done_Reject = 2,
+    Done_Accept = 0,
+    Done_Reject = 1,
+    Wating = 2,
 }
 
 // 文件的类型
@@ -39,7 +39,16 @@ export enum FileType {
     FileRuleSet = 2
 }
 
+// 是否为文件夹
 export enum IsFolder {
     No = 0,
     Yes = 1
+}
+
+// 变量类型
+export enum VariableType {
+    Int = 0,
+    Double = 1,
+    String = 2,
+    Object = 3
 }

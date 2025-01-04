@@ -1,6 +1,7 @@
 
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { File } from "src/file/entities/file.entity";
+import { VariableType } from "src/interface/common.interface";
 
 
 @Entity()
@@ -19,6 +20,9 @@ export class Variable {
     // 统一转化为字符串存储
     @Column()
     default: string
+
+    @Column()
+    variableType: VariableType
 
 
     @ManyToOne(() => File, (file) => file.variable, { onDelete: 'CASCADE' })

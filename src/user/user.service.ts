@@ -19,6 +19,7 @@ export class UserService {
 
   async validateUser(loginUserDto: LoginUserDto) {
     const user = await this.user.findOne({ where: { username: loginUserDto.username } })
+    console.log(user)
     if (!user) return null // 用户不存在
     if (loginUserDto.password !== user.password) return null // 用户不匹配
     return user
@@ -40,6 +41,15 @@ export class UserService {
     const user = await this.user.findOne({ where: { id } })
     const userObj = removeKeys(user, ['password'])
     return userObj
+  }
+
+  async findUserById(userId: number) {
+    const userInfo = await this.user.findOne({
+      where: {
+        id: userId
+      }
+    })
+    return userInfo
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

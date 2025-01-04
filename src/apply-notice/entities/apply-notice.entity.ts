@@ -14,9 +14,6 @@ export class ApplyNotice {
 
     @Column()
     status: ApplyStatus
-    
-    @Column()
-    toUserId: number
 
     @ManyToOne(() => User, (user) => user.applyNotice, { onDelete: 'CASCADE' })
     user: User
