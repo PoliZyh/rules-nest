@@ -35,4 +35,48 @@ export class FileService {
     return info.affected > 0 ? true : false
   }
 
+  async getFilesByProjectId(projectId: number) {
+    const info = await this.file.find({
+      where: {
+        project: { id: projectId }
+      }
+    })
+    return info
+  }
+
+  filterByFileType(fileType: FileType, files: File[]) {
+    const data = []
+    files.forEach(item => {
+      if (item.isFolder || item.fileType == fileType) data.push(item)
+    })
+    return data
+  }
+
+  files2tree(files: File[]) {
+    const data: any = files
+    const idMap = new Map<number, any>(); // 存储所有文件的引用，按 id 映射
+    const tree: Array<any> = []; // 存储最终的树结构
+
+    data.forEach((file) => {
+      // 初始化对象并确保包含 children 数组
+      if (file.isFolder === 1) {
+        file.children = [];
+      }
+      idMap.set(file.id, file); // 按 ID 存储文件引用
+
+      if (file.parentId === 0) {
+        // 根节点（parentId 为 0）
+        tree.push(file);
+      } else {
+        // 不是根节点，找到父节点并将其加入 children
+        const parent = idMap.get(file.parentId);
+        if (parent && parent.isFolder === 1) {
+          parent.children.push(file);
+        }
+      }
+    });
+
+    return tree;
+  }
+
 }

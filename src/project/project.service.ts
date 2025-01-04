@@ -49,6 +49,13 @@ export class ProjectService {
     return res
   }
 
+  async findProjectById(projectId: number) {
+    const info = await this.project.findOne({
+      where: { id: projectId }
+    })
+    return info
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} project`;
   }

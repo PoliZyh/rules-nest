@@ -8,6 +8,7 @@ import { User } from 'src/user/entities/user.entity';
 import { UserProject } from 'src/user-project/entities/user-project.entity';
 import { IsDelete, IsOpen } from 'src/interface/common.interface';
 import { Not } from 'typeorm';
+import { Project } from 'src/project/entities/project.entity';
 
 
 @Injectable()
@@ -17,8 +18,16 @@ export class RuleService {
     @InjectRepository(Rule) private readonly rule: Repository<Rule>,
     @InjectRepository(User) private readonly user: Repository<User>
   ) { }
-  create(createRuleDto: CreateRuleDto) {
-    return 'This action adds a new rule';
+  async create(ruleName: string, rule: string, fileId: number, project: Project) {
+    const data = new Rule()
+    data.ruleName = ruleName
+    data.rule = rule
+    data.isDelete = IsDelete.No
+    data.status = IsOpen.Close
+    data.fileId = fileId
+    data.project = project
+    const info = await this.rule.save(data)
+    return info.id > 0 ? true : false
   }
 
   async findRuleHistoryByProjectId(projectId: number, limit: number, isLast: boolean) {

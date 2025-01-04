@@ -27,6 +27,9 @@ export class Rule {
     @Column()
     status: IsOpen
 
+    @Column()
+    fileId: number
+
     @ManyToOne(() => Project, (project) => project.rules, { onDelete: 'CASCADE' })
     project: Project
 

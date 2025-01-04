@@ -12,5 +12,6 @@ import { UserProjectModule } from 'src/user-project/user-project.module';
   ],
   controllers: [ProjectController],
   providers: [ProjectService],
+  exports: [ProjectService]
 })
 export class ProjectModule {}
