@@ -15,6 +15,7 @@ import { RuleHistoryModule } from './rule-history/rule-history.module';
 import { ApplyNoticeModule } from './apply-notice/apply-notice.module';
 import { FileModule } from './file/file.module';
 import { VariableModule } from './variable/variable.module';
+import { EngineModule } from './engine/engine.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { VariableModule } from './variable/variable.module';
     ApplyNoticeModule,
     FileModule,
     VariableModule,
+    EngineModule,
   ],
   controllers: [AppController],
   providers: [AppService, MessageService],
