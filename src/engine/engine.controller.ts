@@ -11,4 +11,9 @@ export class EngineController {
     return await this.engineService.runEngine(rule)
   }
 
+  @Post('testStr')
+  async testStrEngine(@Body('rule') rule: string) {
+    return await this.engineService.runEngine(rule)
+  }
+
 }

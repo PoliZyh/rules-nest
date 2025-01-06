@@ -87,7 +87,7 @@ export class EngineService {
   async handleGrammar(rule: string) {
 
     // 验证语法正确性
-    if(!this.isBracketMatched(rule)) {
+    if (!this.isBracketMatched(rule)) {
       throw new Error(this.errors.bracketError)
     }
 
@@ -122,7 +122,6 @@ export class EngineService {
    */
   async handleSemantics(rule, varMatches, outputMatches) {
     let exeCode = this.removeEmptyRules(rule)
-    console.log(exeCode)
 
     // 记录变量
     this.varsMap = this.varMatches2Map(varMatches)
@@ -135,8 +134,6 @@ export class EngineService {
       // 重置 `lastIndex`，确保正则可以多次使用
       this.numberLetterPattern.lastIndex = 0;
 
-      // console.log(this.var2MapString(match[1]))
-
       return this.var2MapString(match[1])
     })
 
@@ -144,8 +141,11 @@ export class EngineService {
     exeCode = exeCode.replace(this.dollarSignPattern, (matchStr) => {
       let match = this.dollarSignPattern.exec(matchStr)
       this.dollarSignPattern.lastIndex = 0
-      return `this.collectOutputs(${match[1]})`
+      let typeStr = match[1]
+      typeStr = typeStr.replace(/\.value/g, '.type')
+      return `this.collectOutputs(${match[1]}, ${typeStr})`
     })
+
 
     return await this.dataViste(exeCode)
 
@@ -164,6 +164,7 @@ export class EngineService {
     for (const key of Object.keys(this.varsMap)) {
       await this.handleMountVars(+key)
     }
+
 
     return await this.executeCode(exeCode)
 
@@ -185,6 +186,7 @@ export class EngineService {
       eval(exeCode)
 
     } catch (error) {
+      console.log(error)
 
       throw new Error(this.errors.exeError)
 
@@ -221,9 +223,15 @@ export class EngineService {
   /**
    * 收集输出
    */
-  collectOutputs(outputStr) {
-    return this.outputs.push(eval(outputStr))
+  collectOutputs(outputStr, typeStr) {
+    const type = eval(typeStr)
+    if (this.caculateList.includes(type)) {
+      return this.outputs.push(eval(outputStr))
+    } else if (type == VariableType.String) {
+      return this.outputs.push(eval(`(() => { return ${JSON.stringify(outputStr)}; })()`))
+    }
   }
+
 
   /**
    */
@@ -239,7 +247,7 @@ export class EngineService {
    */
   async handleMountVars(varId: number) {
     const varInfo = await this.findVarById(varId)
-    // this.varsMap[varId].type = varInfo.variableType
+    this.varsMap[varId].type = varInfo.variableType
 
     // 异常处理-数据库出错
     try {
@@ -260,10 +268,10 @@ export class EngineService {
    * 删除空白规则
    */
   removeEmptyRules(rule) {
-      this.emptyRules.forEach(emptyRule => {
-        rule = rule.replaceAll(emptyRule, '')
-      })
-      return rule
+    this.emptyRules.forEach(emptyRule => {
+      rule = rule.replaceAll(emptyRule, '')
+    })
+    return rule
   }
 
   /**
@@ -276,7 +284,7 @@ export class EngineService {
       '[': ']',
       '{': '}',
     };
-  
+
     for (let char of str) {
       if (brackets[char]) {
         // 如果是左括号，入栈
@@ -288,11 +296,11 @@ export class EngineService {
         }
       }
     }
-  
+
     // 栈为空则表示完全匹配
     return stack.length === 0;
   }
 
-  
+
 
 }
