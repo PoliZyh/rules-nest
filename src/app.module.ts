@@ -16,6 +16,7 @@ import { ApplyNoticeModule } from './apply-notice/apply-notice.module';
 import { FileModule } from './file/file.module';
 import { VariableModule } from './variable/variable.module';
 import { EngineModule } from './engine/engine.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { EngineModule } from './engine/engine.module';
     FileModule,
     VariableModule,
     EngineModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, MessageService],
