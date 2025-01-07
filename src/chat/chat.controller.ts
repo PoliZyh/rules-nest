@@ -12,5 +12,10 @@ export class ChatController {
     return await this.chatService.chat(message)
   }
 
+  @Post('rules')
+  async updateRules() {
+    return this.chatService.chatForRules()
+  }
+
 
 }
