@@ -36,8 +36,9 @@ $ npm run start:dev
 | 规则引擎架构图         | <a href="./docs/决策引擎洋葱圈模型.png">点我前往</a>         |
 | 智能决策引擎迭代计划   | <a href="./docs/引擎迭代计划.md">点我前往</a>                |
 | 系统数据库ER图         | <a href="./docs/ER图.png">点我前往</a>                       |
-| 智能决策引擎流程设计图 | <a href="./docs/智能决策引擎流程图.png">点我前往</a>                                                     |
-| 智能决策引擎架构设计图 | <a href="./docs/架构图.png">点我前往</a>                                                     |
+| 智能决策引擎流程设计图 | <a href="./docs/智能决策引擎流程图.png">点我前往</a>         |
+| 智能决策引擎架构设计图 | <a href="./docs/架构图.png">点我前往</a>                     |
+| XGBoost原理图          | <a href="./docs/XGBoost原理图.jpg">点我前往 </a>                                                    |
 
 
 ## Any Questions？
