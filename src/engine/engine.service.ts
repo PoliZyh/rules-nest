@@ -100,6 +100,8 @@ export class EngineService {
     // 找到所有 #数字#字母 的匹配项
     let match;
     while ((match = this.numberLetterPattern.exec(rule)) !== null) {
+      // 常量不需要存储
+      if (match[1] == 0) continue
       numberLetterMatches.push({
         number: match[1],
         letter: match[2]
@@ -134,7 +136,7 @@ export class EngineService {
       // 重置 `lastIndex`，确保正则可以多次使用
       this.numberLetterPattern.lastIndex = 0;
 
-      return this.var2MapString(match[1])
+      return this.var2MapString(match[1], match[2])
     })
 
     // 替换所有 $输出$ 的匹配项
@@ -216,8 +218,10 @@ export class EngineService {
   /**
    * 将变量映射为Map字符串
    */
-  var2MapString(varId) {
-    return `this.${this.mapName}[${varId}].${this.propName}`
+  var2MapString(varId, val) {
+    // varId==0 常量
+    return varId == 0 ? `${val}`
+    : `this.${this.mapName}[${varId}].${this.propName}`
   }
 
   /**
@@ -246,21 +250,31 @@ export class EngineService {
    * 将变量信息挂载到引擎上
    */
   async handleMountVars(varId: number) {
-    const varInfo = await this.findVarById(varId)
-    this.varsMap[varId].type = varInfo.variableType
 
-    // 异常处理-数据库出错
-    try {
+    if (varId == 0) {
+      // id为0则表明为常量
 
-      this.varsMap[varId].value =
-        this.caculateList.includes(varInfo.variableType) ?
-          +varInfo.default : varInfo.default
+    
+    } else {
+      // 存储于数据库的变量
+      const varInfo = await this.findVarById(varId)
+      this.varsMap[varId].type = varInfo.variableType
 
-    } catch {
+      // 异常处理-数据库出错
+      try {
 
-      throw new Error(this.errors.varError)
+        this.varsMap[varId].value =
+          this.caculateList.includes(varInfo.variableType) ?
+            +varInfo.default : varInfo.default
 
+      } catch {
+
+        throw new Error(this.errors.varError)
+
+      }
     }
+
+
 
   }
 

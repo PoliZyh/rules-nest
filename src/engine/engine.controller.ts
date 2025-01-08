@@ -16,4 +16,9 @@ export class EngineController {
     return await this.engineService.runEngine(rule)
   }
 
+  @Post('const')
+  async testConstEngine(@Body('rule') rule: string) {
+    return await this.engineService.runEngine(rule)
+  }
+
 }
