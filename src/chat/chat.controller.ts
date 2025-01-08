@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
+import { mapStructureToString } from 'src/utils/rulesTransform'; 
+
 
 @Controller('chat')
 export class ChatController {
@@ -13,8 +13,17 @@ export class ChatController {
   }
 
   @Post('rules')
-  async updateRules() {
-    return this.chatService.chatForRules()
+  async updateRules(@Body('message') message: string) {
+    const rep = await this.chatService.chatForRules(message)
+    const extracts = this.chatService.extractContent(rep)
+    const rules = this.chatService.rulesJson2Js(extracts.rules)
+    const ruleStr = mapStructureToString(rules)
+    return {
+      logic: extracts.logicExplanation,
+      rules,
+      vars: extracts.variableExplanation,
+      ruleStr
+    }
   }
 
 

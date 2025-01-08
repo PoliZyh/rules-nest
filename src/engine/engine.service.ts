@@ -144,8 +144,15 @@ export class EngineService {
       let match = this.dollarSignPattern.exec(matchStr)
       this.dollarSignPattern.lastIndex = 0
       let typeStr = match[1]
-      typeStr = typeStr.replace(/\.value/g, '.type')
-      return `this.collectOutputs(${match[1]}, ${typeStr})`
+      if (typeStr == typeStr.replace(/\.value/g, '.type')) {
+        // 常量
+        return `this.collectOutputs('${match[1]}', ${VariableType.String})`
+      } else {
+        typeStr = typeStr.replace(/\.value/g, '.type')
+        return `this.collectOutputs(${match[1]}, ${typeStr})`
+      }
+
+      
     })
 
 
@@ -182,6 +189,7 @@ export class EngineService {
   async executeCode(exeCode) {
 
     // const testStr = 'leti a = 1'
+    // console.log(exeCode)
 
     try {
 
@@ -220,7 +228,7 @@ export class EngineService {
    */
   var2MapString(varId, val) {
     // varId==0 常量
-    return varId == 0 ? `${val}`
+    return varId == 0 ? `${val.toString()}`
     : `this.${this.mapName}[${varId}].${this.propName}`
   }
 
