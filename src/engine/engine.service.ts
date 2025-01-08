@@ -146,7 +146,7 @@ export class EngineService {
       let typeStr = match[1]
       if (typeStr == typeStr.replace(/\.value/g, '.type')) {
         // 常量
-        return `this.collectOutputs('${match[1]}', ${VariableType.String})`
+        return `this.collectOutputs(${match[1]}, ${VariableType.String})`
       } else {
         typeStr = typeStr.replace(/\.value/g, '.type')
         return `this.collectOutputs(${match[1]}, ${typeStr})`

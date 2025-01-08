@@ -18,11 +18,13 @@ export class ChatController {
     const extracts = this.chatService.extractContent(rep)
     const rules = this.chatService.rulesJson2Js(extracts.rules)
     const ruleStr = mapStructureToString(rules)
+    const varMap = this.chatService.varStr2Map(extracts.variableExplanation)
     return {
       logic: extracts.logicExplanation,
       rules,
       vars: extracts.variableExplanation,
-      ruleStr
+      ruleStr,
+      varMap
     }
   }
 

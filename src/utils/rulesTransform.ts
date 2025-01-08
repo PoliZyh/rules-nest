@@ -29,11 +29,11 @@ export function mapStructureToString(structure) {
           return "";
       }
 
-      const left = (condition.left && condition.left.libId)
+      const left = (condition.left && (condition.left.libId >= 0))
           ? `#${condition.left.libId}#${condition.left.varName || ""}#`
           : "";
       const operator = condition.operator || "";
-      const right = (condition.right && condition.right.libId)
+      const right = (condition.right && (condition.right.libId >= 0))
           ? `#${condition.right.libId}#${condition.right.varName || ""}#`
           : "";
 
