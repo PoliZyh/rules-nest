@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateEngineDto } from './dto/create-engine.dto';
 import { UpdateEngineDto } from './dto/update-engine.dto';
 import { Variable } from 'src/variable/entities/variable.entity';
-import { Repository } from 'typeorm';
+import { Any, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VariableType } from 'src/interface/common.interface';
 
@@ -15,7 +15,7 @@ export class EngineService {
   // 匹配输出
   private readonly dollarSignPattern = /\$(.*?)\$/g;
 
-  private varsMap = {} //  '9': { varId: '9', varName: 'a', value: null }
+  private varsMap = {} //  '9': { varId: '9', varName: 'a', value: null, type: 1 }
   private outputs = []
   private readonly mapName = 'varsMap'
   private readonly propName = 'value'
@@ -56,7 +56,6 @@ export class EngineService {
     this.initGlobalVars()
     return await this.handleCatchErrors(rule)
   }
-
 
 
   /**
@@ -322,6 +321,90 @@ export class EngineService {
     // 栈为空则表示完全匹配
     return stack.length === 0;
   }
+
+
+
+
+  /**
+   * openAPI下无需数据库直接执行
+   */
+  async runEngineUnderOpenAPI(rule, vars) {
+    // 初始化
+    this.initGlobalVars()
+
+    // 异常处理
+    try {
+
+      await this.handleGrammarUnderOpenAPI(rule, vars)
+
+    } catch (error) {
+
+      this.outputs = []
+      this.outputs.push(error.message)
+
+    }
+
+    return this.outputs
+
+  }
+
+  async handleGrammarUnderOpenAPI(rule, vars) {
+
+    // 验证语法正确性
+    if (!this.isBracketMatched(rule)) {
+      throw new Error(this.errors.bracketError)
+    }
+
+    // 替换varId
+    rule = rule.replace(this.numberLetterPattern, (matchStr) => {
+      let match = this.numberLetterPattern.exec(matchStr)
+      // 重置 `lastIndex`，确保正则可以多次使用
+      this.numberLetterPattern.lastIndex = 0;
+      // 根据match[2]找到varId
+      const result: any = Object.values(vars).find((item: any) => item.varName == match[2]);
+
+      return `#${result.varId}#${match[2]}#`
+    })
+
+    return await this.handleSemanticsUnderOpenAPI(rule, vars)
+  }
+
+  async handleSemanticsUnderOpenAPI(rule, vars) {
+    let exeCode = this.removeEmptyRules(rule)
+
+    // 记录变量
+    this.varsMap = vars
+
+    // 将rule转换为code
+    // 替换所有 #数字#字母 的匹配项
+    exeCode = exeCode.replace(this.numberLetterPattern, (matchStr) => {
+      let match = this.numberLetterPattern.exec(matchStr)
+      // 重置 `lastIndex`，确保正则可以多次使用
+      this.numberLetterPattern.lastIndex = 0;
+
+      return this.var2MapString(match[1], match[2])
+    })
+
+    // 替换所有 $输出$ 的匹配项
+    exeCode = exeCode.replace(this.dollarSignPattern, (matchStr) => {
+      let match = this.dollarSignPattern.exec(matchStr)
+      this.dollarSignPattern.lastIndex = 0
+      let typeStr = match[1]
+      if (typeStr == typeStr.replace(/\.value/g, '.type')) {
+        // 常量
+        return `this.collectOutputs(${match[1]}, ${VariableType.String})`
+      } else {
+        typeStr = typeStr.replace(/\.value/g, '.type')
+        return `this.collectOutputs(${match[1]}, ${typeStr})`
+      }
+      
+    })
+
+    return await this.executeCode(exeCode)
+
+
+  }
+
 
 
 

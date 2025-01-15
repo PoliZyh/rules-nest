@@ -51,7 +51,7 @@ export class ChatService {
     const logicPattern = /\[逻辑解释\](.*?)\[逻辑结束\]/s;
     const logicExplanation = data.match(logicPattern)?.[1].trim();
 
-    console.log(rules)
+    // console.log(rules)
 
     return {
       variableExplanation,
@@ -61,6 +61,7 @@ export class ChatService {
   }
 
   rulesJson2Js(rules) {
+    console.log('r', rules)
     const jsonString = rules
       .match(/```js\n([\s\S]+?)\n```/)[1]  // Extract everything inside ```js ... ```
       .replace(/^export default /, '');   // Remove the `export default` part

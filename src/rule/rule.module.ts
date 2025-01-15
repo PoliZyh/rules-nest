@@ -8,6 +8,7 @@ import { FileModule } from 'src/file/file.module';
 import { UserProjectModule } from 'src/user-project/user-project.module';
 import { RuleHistoryModule } from 'src/rule-history/rule-history.module';
 import { ProjectModule } from 'src/project/project.module';
+import { EngineModule } from 'src/engine/engine.module';
 
 @Module({
   imports: [
@@ -15,9 +16,11 @@ import { ProjectModule } from 'src/project/project.module';
     FileModule,
     UserProjectModule,
     RuleHistoryModule,
-    ProjectModule
+    ProjectModule,
+    EngineModule
   ],
   controllers: [RuleController],
   providers: [RuleService],
+  exports: [RuleService]
 })
 export class RuleModule {}

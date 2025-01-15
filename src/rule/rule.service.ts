@@ -141,6 +141,14 @@ export class RuleService {
     })
     return info
   }
+
+
+  async findRuleByRuleId(ruleId: number) {
+    const info = await this.rule.findOne({
+      where: { id: ruleId }
+    })
+    return info
+  }
   
 
 }

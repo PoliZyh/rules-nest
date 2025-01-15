@@ -17,6 +17,7 @@ import { FileModule } from './file/file.module';
 import { VariableModule } from './variable/variable.module';
 import { EngineModule } from './engine/engine.module';
 import { ChatModule } from './chat/chat.module';
+import { OpenApiModule } from './open-api/open-api.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ChatModule } from './chat/chat.module';
     VariableModule,
     EngineModule,
     ChatModule,
+    OpenApiModule,
   ],
   controllers: [AppController],
   providers: [AppService, MessageService],

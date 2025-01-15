@@ -9,6 +9,7 @@ import { enum2operation } from 'src/utils/enum2op';
 import { IsOpen } from 'src/interface/common.interface';
 import { RuleHistoryService } from 'src/rule-history/rule-history.service';
 import { ProjectService } from 'src/project/project.service';
+import { EngineService } from 'src/engine/engine.service';
 
 @Controller('rule')
 export class RuleController {
@@ -17,7 +18,8 @@ export class RuleController {
     private readonly fileService: FileService,
     private readonly userProject: UserProjectService,
     private readonly ruleHistory: RuleHistoryService,
-    private readonly projectService: ProjectService
+    private readonly projectService: ProjectService,
+    private readonly engineService: EngineService
   ) {}
 
   // 2.1获取近期工作台数据
@@ -129,10 +131,13 @@ export class RuleController {
   // 2.7.2 运⾏项⽬
   @Post('/run')
   async runRule(@Body('type') fileType: FileType, @Body('id') id: number) {
-    return {
-      fileType,
-      id
-    }
+
+    const ruleInfo = await this.ruleService.findRuleByRuleId(id)
+
+    const results = await this.engineService.runEngine(ruleInfo.rule)
+
+    return results
+    
   }
 
   // 2.7.7 修改规则
